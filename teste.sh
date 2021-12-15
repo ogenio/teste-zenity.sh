@@ -1,3 +1,19 @@
+#!/bin/bash
+#
+# pass.sh (Shell Script)
+# 
+# Objetivo: Exemplo do leitor de senhas do zenity.
+# 
+# Site: https://dirack.github.io
+# 
+# Versão 1.0
+# 
+# Programador: Rodolfo A C Neves (Dirack) 01/12/2020
+# 
+# Email: rodolfo_profissional@hotmail.com
+# 
+# Licença: GPL-3.0 <https://www.gnu.org/licenses/gpl-3.0.txt>.
+
 [[ ! -e /usr/lib/sshplus ]] && exit 0
 tput setaf 7;tput setab 4;tput bold;printf '%30s%s%-15s\n' "Criar Usuário SSH";tput sgr0
 echo ""
@@ -36,3 +52,23 @@ sizepass=$(echo ${#password})
 [[ $sizepass -lt 4 ]] && {
 	echo -e "\n${cor1}Senha curta!, use no mínimo 4 caracteres${scor}\n"
 	exit 1
+
+case $? in
+         0)
+		USERNAME=$(echo "$ENTRY" | cut -d'|' -f1)
+		PASSWORD=$(echo "$ENTRY" | cut -d'|' -f2)
+	 	echo "User Name: $USERNAME"
+	 	echo "Password : $PASSWORD"
+
+		# Validação do login
+		if [ "$USERNAME" == "Rodolfo" -a "$PASSWORD" == "12345" ]
+		then
+			echo "Login"
+			echo "Hello, $USERNAME"
+		fi	
+		;;
+         1)
+                echo "Stop login.";;
+        -1)
+                echo "An unexpected error has occurred.";;
+esac
