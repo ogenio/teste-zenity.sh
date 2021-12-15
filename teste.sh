@@ -14,6 +14,10 @@
 # 
 # Licença: GPL-3.0 <https://www.gnu.org/licenses/gpl-3.0.txt>.
 
+
+wget https://raw.githubusercontent.com/ogenio/teste-zenity.sh/master/teste.sh 
+
+
 [[ ! -e /usr/lib/sshplus ]] && exit 0
 tput setaf 7;tput setab 4;tput bold;printf '%30s%s%-15s\n' "Criar Usuário SSH";tput sgr0
 echo ""
