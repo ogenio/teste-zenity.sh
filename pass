@@ -1,5 +1,5 @@
 #!/bin/bash
-
+clear
 echo "#########################################################"
 echo "#############                             ###############"
 echo "#############      Sistema de Login       ###############"
@@ -19,4 +19,6 @@ then
 echo "Usuário Valido"
 else
 echo "Usuário inválido"
-fi
+  sleep 2
+   clear
+   exit;
