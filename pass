@@ -1,0 +1,22 @@
+#!/bin/bash
+
+echo "#########################################################"
+echo "#############                             ###############"
+echo "#############      Sistema de Login       ###############"
+echo "#############                             ###############"
+echo "#########################################################"
+
+echo "Entre com o usuário: "
+read login
+echo "Entre com a senha: "
+read pass
+
+valid_user="ogenio"
+valid_pass="1234"
+
+if [ "$login" == "$valid_user" ] && [ "$pass" == "$valid_pass" ];
+then
+echo "Usuário Valido"
+else
+echo "Usuário inválido"
+fi
