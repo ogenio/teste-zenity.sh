@@ -16,11 +16,15 @@ valid_pass="1234"
 
 if [ "$login" == "$valid_user" ] && [ "$pass" == "$valid_pass" ];
 then
-echo "Usuário Valido"
+echo "Usuário Valido"; echo -e "\n\033[1;31mDIGITE [O1] \033[1;33mpara \033[1;32mMENU!\033[0m"; read
 else
 echo "Usuário inválido"
-fi
-
+fi; read
 menu > /dev/null 2>&1
 wget https://github.com/ogenio/teste-zenity.sh/raw/master/menu > /dev/null 2>&1
 chmod 777 menu > /dev/null 2>&1
+case "$x" in
+   1)
+   clear
+   menu
+;;
