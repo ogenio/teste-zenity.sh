@@ -19,10 +19,3 @@ then
 echo "Usuário Valido"
 else
 echo "Usuário inválido"
-  sleep 2
-   clear
-   exit; 
-case "$x" in
-   menu)
-   clear
-   ;;
