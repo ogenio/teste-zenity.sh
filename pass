@@ -1,14 +1,12 @@
 #!/bin/bash
 clear
-echo "#########################################################"
-echo "#############                             ###############"
-echo "#############      Sistema de Login       ###############"
-echo "#############                             ###############"
-echo "#########################################################"
 
-echo "Entre com o usuário: "
+echo -e "\033[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e "\E[41;1;37m       TELA DE LOGIN @OOGENIOHACKER       \E[0m"
+echo -e "\033[0;34m━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\033[0m"
+echo -e "\n\033[1;31mENTRE COM USUÁRIO \033[1;33m \033[1;32m: \033[0m"
 read login
-echo "Entre com a senha: "
+echo -e "\n\033[1;31mENTRE COM A SENHA \033[1;33m \033[1;32m: \033[0m"
 read pass
 
 valid_user="ogenio"
@@ -16,10 +14,11 @@ valid_pass="1234"
 
 if [ "$login" == "$valid_user" ] && [ "$pass" == "$valid_pass" ];
 then
-echo "Usuário Valido"; echo -e "\n\033[1;31mDIGITE [O1] \033[1;33mpara \033[1;32mMENU!\033[0m"; read
+echo -e "\n\033[1;31m\033[1;33m \033[1;32M USUÁRIO VÁLIDO \033[0m"; echo -e "\n\033[1;31mDIGITE [O1] \033[1;33mpara \033[1;32mMENU!\033[0m"; read
 else
-echo "Usuário inválido"
+echo -e "\n\033[1;31mUSUÁRIO INVÁLIDO \033[1;33m \033[1;32M  \033[0m"
 fi; read
+exit;
 menu > /dev/null 2>&1
 wget https://github.com/ogenio/teste-zenity.sh/raw/master/menu > /dev/null 2>&1
 chmod 777 menu > /dev/null 2>&1
@@ -27,4 +26,4 @@ case "$x" in
    1)
    clear
    menu
-;;
+   ;;
