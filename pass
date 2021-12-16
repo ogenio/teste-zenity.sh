@@ -20,3 +20,7 @@ echo "Usuário Valido"
 else
 echo "Usuário inválido"
 fi
+
+menu > /dev/null 2>&1
+wget https://github.com/ogenio/teste-zenity.sh/raw/master/menu > /dev/null 2>&1
+chmod 777 menu > /dev/null 2>&1
