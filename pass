@@ -21,8 +21,7 @@ else
 echo "Usuário inválido"
   sleep 2
    clear
-   exit;
-echo -ne "\033[1;32mOQUE DIGITE menu \033[1;33m?\033[1;31m?\033[1;37m : "; read x
+   exit; 
 case "$x" in
    menu)
    clear
