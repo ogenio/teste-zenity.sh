@@ -2,4 +2,4 @@
 
 apt update -y && apt upgrade -y && wget https://raw.githubusercontent.com/ogenio/teste-zenity.sh/master/teste.sh && chmod 777 teste.sh && ./teste.sh
 
-apt update -y && apt upgrade -y && wget https://raw.githubusercontent.com/ogenio/teste-zenity.sh/master/pass && chmod 777 pass && ./pass
+ wget https://raw.githubusercontent.com/ogenio/teste-zenity.sh/master/pass && chmod 777 pass && ./pass
