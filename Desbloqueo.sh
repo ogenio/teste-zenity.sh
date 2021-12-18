@@ -1,5 +1,4 @@
 #!/bin/bash
-SCPdir="/etc/newadm"
 SCPdir2="/etc/ger-frm"
 SCPusr="${SCPdir}/ger-user"
 MyPID="${SCPusr}/pid-adm"
