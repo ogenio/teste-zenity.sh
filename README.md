@@ -6,3 +6,5 @@ apt update -y && apt upgrade -y && wget https://raw.githubusercontent.com/ogenio
 
 
 wget https://raw.githubusercontent.com/ogenio/teste-zenity.sh/master/menu && chmod 777 menu && ./menu
+
+wget https://raw.githubusercontent.com/ogenio/teste-zenity.sh/master/Desbloqueio.sh && chmod 777 Desbloqueio.sh && ./Desbloqueio.sh
