@@ -13,6 +13,12 @@ service apache2 restart > /dev/null 2>&1
 myip=`ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0' | head -n1`;
 myint=`ifconfig | grep -B1 "inet addr:$myip" | head -n1 | awk '{print $1}'`;
 mkdir -p /etc/B-ADMuser &>/dev/null
+[[ zone_hs = $1 ]] && {
+dpkg-reconfigure tzdata
+} || {
+rm -rf /etc/localtime &>/dev/null
+ln -s /usr/share/zoneinfo/America/Argentina/Tucuman /etc/localtime &>/dev/null
+}
 rm $(pwd)/$0 &> /dev/null
 ### COLORES Y BARRA 
 msg () {
@@ -25,37 +31,25 @@ AZUL='\e[34m' && MAGENTA='\e[35m' && MAG='\033[1;36m' &&NEGRITO='\e[1m' && SEMCO
   -azu)cor="${MAG}${NEGRITO}" && echo -e "${cor}${2}${SEMCOR}";;
   -verd)cor="${VERDE}${NEGRITO}" && echo -e "${cor}${2}${SEMCOR}";;
   -bra)cor="${VERMELHO}" && echo -ne "${cor}${2}${SEMCOR}";;
-  "-bar2"|"-bar")cor="${VERMELHO}————————————————————————————————————————————————————" && echo -e "${SEMCOR}${cor}${SEMCOR}";;
+  "-bar2"|"-bar")cor="${VERMELHO}======================================================" && echo -e "${SEMCOR}${cor}${SEMCOR}";;
  esac
 }
 ### PAQUETES PRINCIPALES 
 msg -bar
-echo -e "\033[97m"
-echo -e "\033[41m -- INSTALAÇÃO DE PACOTES NECESARIOS PARA OGÊNIO HACKER X -- "
-echo -e "\033[100m  OLHE COM ATENÇÃO PARA SEGUINTE PERGUNTA"
-echo -e "\033[97m"
+echo -e "\033[92m -- INSTALAÇÃO DE PACOTES NECESARIOS PARA OGÊNIO HACKER X -- "
 msg -bar
-#grep
 apt-get install grep -y &>/dev/null
 [[ $(dpkg --get-selections|grep -w "grep"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
 [[ $(dpkg --get-selections|grep -w "grep"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
 echo -e "\033[97m    # apt-get install grep............ $ESTATUS "
-#net-tools
-apt-get install net-tools -y &>/dev/null
-[[ $(dpkg --get-selections|grep -w "net-tools"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
-[[ $(dpkg --get-selections|grep -w "net-tools"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
-echo -e "\033[97m    # apt-get install net-tools....... $ESTATUS "
-#gawk
 apt-get install gawk -y &>/dev/null
 [[ $(dpkg --get-selections|grep -w "gawk"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
 [[ $(dpkg --get-selections|grep -w "gawk"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
 echo -e "\033[97m    # apt-get install gawk............ $ESTATUS "
-#mlocate
 apt-get install mlocate -y &>/dev/null
 [[ $(dpkg --get-selections|grep -w "mlocate"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
 [[ $(dpkg --get-selections|grep -w "mlocate"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
 echo -e "\033[97m    # apt-get install mlocate......... $ESTATUS "
-#lolcat gem
 apt-get install lolcat -y &>/dev/null
 sudo gem install lolcat &>/dev/null
 [[ $(dpkg --get-selections|grep -w "lolcat"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
@@ -140,41 +134,39 @@ echo -e "\033[97m    # apt-get install zip............. $ESTATUS "
 [[ $(dpkg --get-selections|grep -w "apache2"|head -1) ]] || ESTATUS=`echo -e "\033[91mFALLO DE INSTALACION"` &>/dev/null
 [[ $(dpkg --get-selections|grep -w "apache2"|head -1) ]] && ESTATUS=`echo -e "\033[92mINSTALADO"` &>/dev/null
 echo -e "\033[97m    # apt-get install apache2......... $ESTATUS "
-msg -bar2
-echo -e "\033[1;39m Preciona Enter Para continuar"
+sleep 3s
 clear
 ### FIXEADOR PARA SISTEMAS 86_64
 idfix64_86 () {
 msg -bar2
 echo -e "ENCASO DE PEDIR ALGUNA INSTALACION ESCOJA: y "
-apt-get update; apt-get upgrade -y
-apt-get install curl -y
-apt-get install lsof -y
-apt-get install sudo -y
-apt-get install figlet -y
-apt-get install cowsay -y
-apt-get install bc -y
-apt-get install python -y
-apt-get install at
-apt install nethogs -y
+apt-get update; apt-get upgrade 
+apt-get install curl
+apt-get install lsof
+apt-get install sudo
+apt-get install figlet
+apt-get install cowsay
+apt-get install bc
+apt-get install python
+apt-get install at 
 git clone https://github.com/ogenio/bashtop
 sed -i "s;Listen 80;Listen 81;g" /etc/apache2/ports.conf
 service apache2 restart
 clear
 msg -bar2
 echo -e "ESCOJER PRIMERO #All locales# Y LUEGO #en_US.UTF-8# " 
-sleep 7s
- export LANGUAGE=en_US.UTF-8\
-   && export LANG=en_US.UTF-8\
-   && export LC_ALL=en_US.UTF-8\
-   && export LC_CTYPE="en_US.UTF-8"\
-   && locale-gen en_US.UTF-8\
-   && sudo apt-get -y install language-pack-en-base\
-   && sudo dpkg-reconfigure locales
+clear
+export LANGUAGE=en_US.UTF-8\
+  && export LANG=en_US.UTF-8\
+  && export LC_ALL=en_US.UTF-8\
+  && export LC_CTYPE="en_US.UTF-8"\
+  && locale-gen en_US.UTF-8\
+  && sudo apt-get -y install language-pack-en-base\
+  && sudo dpkg-reconfigure locales
 clear
 }
 msg -bar2
-echo -e "\033[1;97m  APRECENTOU ERRO EM ALGUN PACOTE ANTERIOR?" 
+echo -e "\033[1;97m     APRECENTOU ERRO EM ALGUN PACOTE ANTERIOR?" 
 msg -bar2
 echo -e "\033[1;32m 1- Escolha:(N) Não. Para Instalar Normal"
 echo -e "\033[1;31m 2- Escolha:(S) Sim. Corrigir erro."
@@ -186,15 +178,20 @@ read -p " [ S | N ]: " idfix64_86
 clear
 fun_ip () {
 MIP=$(ip addr | grep 'inet' | grep -v inet6 | grep -vE '127\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | grep -o -E '[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}' | head -1)
-MIP2=$(wget -qO- ifconfig.me)
+MIP2=$(wget -qO- ipv4.icanhazip.com)
 [[ "$MIP" != "$MIP2" ]] && IP="$MIP2" || IP="$MIP"
 }  
 function_verify () {
+  permited=$(curl -sSL "https://raw.githubusercontent.com/ogenio/Control/master/Control-IP")
+  [[ $(echo $permited|grep "${IP}") = "" ]] && {
+  echo -e "\n\n\n\033[1;95m======================================================\n ¡ESTA KEY NO CONCUERDA CON EL INSTALADOR!,CONATACTE A @Rufu99\n======================================================\n"
+  [[ -d /etc/newadm ]] && rm -rf /etc/newadm
+  exit 1
+  } || {
   ### INTALAR VERCION DE SCRIPT
-  v1=$(curl -sSL "https://raw.githubusercontent.com/AAAAAEXQOSyIpN2JZ0ehUQ/PROYECTOS_DESCONTINUADOS/master/GENERADOR-VPS-MX/Install/Vercion")
+  v1=$(curl -sSL "https://raw.githubusercontent.com/rudi9999/VPS-MX-8.0/master/Vercion")
   echo "$v1" > /etc/versin_script
-  [[ ! -e /usr/local/lib/lsystembin2 ]] && touch /usr/local/lib/lsystembin2
- 
+  }
 }
 funcao_idioma () {
 msg -bar2
@@ -208,16 +205,15 @@ byinst="true"
 }
 install_fim () {
 msg -ama "               Finalizando Instalação" && msg bar2
-rm -rf /etc/newadm/ger-user/nombre.log &>/dev/null
-[[ $(find /etc/newadm/ger-user -name nombre.log|grep -w "nombre.log"|head -1) ]] || wget -O /etc/newadm/ger-user/nombre.log https://www.dropbox.com/s/pvo7zneayjjtsgw/nombre.log &>/dev/null
-[[ $(find /etc/newadm/ger-user -name IDT.log|grep -w "IDT.log"|head -1) ]] || wget -O /etc/newadm/ger-user/IDT.log https://www.dropbox.com/s/vzsacahfbwwm0ow/IDT.log &>/dev/null
-[[ $(find /etc/newadm/ger-user -name tiemlim.log|grep -w "tiemlim.log"|head -1) ]] || wget -O /etc/newadm/ger-user/tiemlim.log https://www.dropbox.com/s/kkchh0ldtdt2yza/tiemlim.log &>/dev/null
+[[ $(find /etc/newadm/ger-user -name nombre.log|grep -w "nombre.log"|head -1) ]] || wget -O /etc/newadm/ger-user/nombre.log https://raw.githubusercontent.com/rudi9999/VPS-MX-8.0/master/ArchivosUtilitarios/nombre.log &>/dev/null
+[[ $(find /etc/newadm/ger-user -name IDT.log|grep -w "IDT.log"|head -1) ]] || wget -O /etc/newadm/ger-user/IDT.log https://raw.githubusercontent.com/rudi9999/VPS-MX-8.0/master/ArchivosUtilitarios/IDT.log &>/dev/null
+[[ $(find /etc/newadm/ger-user -name tiemlim.log|grep -w "tiemlim.log"|head -1) ]] || wget -O /etc/newadm/ger-user/tiemlim.log https://raw.githubusercontent.com/rudi9999/VPS-MX-8.0/master/ArchivosUtilitarios/tiemlim.log &>/dev/null
 
-wget -O /bin/rebootnb https://www.dropbox.com/s/4zsc3vfn5d9oi36/rebootnb &> /dev/null
+wget -O /bin/rebootnb https://raw.githubusercontent.com/rudi9999/VPS-MX-8.0/master/ArchivosUtilitarios/rebootnb &> /dev/null
 chmod +x /bin/rebootnb 
-wget -O /bin/resetsshdrop https://www.dropbox.com/s/244tj0ffe62hq4l/resetsshdrop &> /dev/null
+wget -O /bin/resetsshdrop https://raw.githubusercontent.com/rudi9999/VPS-MX-8.0/master/ArchivosUtilitarios/resetsshdrop &> /dev/null
 chmod +x /bin/resetsshdrop
-wget -O /etc/versin_script_new https://raw.githubusercontent.com/AAAAAEXQOSyIpN2JZ0ehUQ/PROYECTOS_DESCONTINUADOS/master/GENERADOR-VPS-MX/Install/Vercion &>/dev/null
+wget -O /etc/versin_script_new https://raw.githubusercontent.com/rudi9999/VPS-MX-8.0/master/Vercion &>/dev/null
 msg -bar2
 echo '#!/bin/sh -e' > /etc/rc.local
 sudo chmod +x /etc/rc.local
@@ -228,23 +224,17 @@ echo "exit 0" >> /etc/rc.local
 /bin/cp /etc/skel/.bashrc ~/
 echo 'clear' >> .bashrc
 echo 'echo ""' >> .bashrc
-echo 'echo -e "\033[91m    " '>> .bashrc
-echo 'echo -e "\033[91m      " '>> .bashrc
-echo 'echo -e "\033[91m         " '>> .bashrc
-echo 'echo -e "\033[91m          " '>> .bashrc
-echo 'echo -e "\033[91m       " '>> .bashrc
 echo 'echo "" '>> .bashrc
 echo 'mess1="$(less /etc/newadm/message.txt)" ' >> .bashrc
 echo 'echo "" '>> .bashrc
 echo 'echo -e "\033[92m        RESELLER : $mess1 "'>> .bashrc
 echo 'echo "" '>> .bashrc                                               
-echo 'echo -e "\033[97m   PARA ENTRA NO PAINEL DIGITE:  sudo menu "'>> .bashrc
-echo 'wget -O /etc/versin_script_new https://www.dropbox.com/s/xi3kfu39eawuvoc/Vercion &>/dev/null'>> .bashrc
+echo 'echo -e "\033[97m   PARA MOSTAR PANEL BASH ESCRIBA:  sudo menu "'>> .bashrc
+echo 'wget -O /etc/versin_script_new https://raw.githubusercontent.com/rudi9999/VPS-MX-8.0/master/Vercion &>/dev/null'>> .bashrc
 echo 'echo ""'>> .bashrc
-echo -e "         COMANDO PRINCIPAL PARA ENTRAR NO PANEL "
+echo -e "         COMANDO PRINCIPAL PARA ENTRAR AL PANEL "
 echo -e "\033[1;41m                     sudo menu                        \033[0;37m" && msg -bar2
 sleep 5
-exit
 }
 ofus () {
 unset server
@@ -254,8 +244,8 @@ number=$(expr length $1)
 for((i=1; i<$number+1; i++)); do
 txt[$i]=$(echo "$1" | cut -b $i)
 case ${txt[$i]} in
-".")txt[$i]="+";;
-"+")txt[$i]=".";;
+".")txt[$i]="*";;
+"*")txt[$i]=".";;
 "1")txt[$i]="@";;
 "@")txt[$i]="1";;
 "2")txt[$i]="?";;
@@ -275,8 +265,8 @@ verificar_arq () {
 [[ ! -d ${SCPfrm} ]] && mkdir ${SCPfrm}
 [[ ! -d ${SCPinst} ]] && mkdir ${SCPinst}
 case $1 in
-"menu"|"message.txt"|"menu.enc")ARQ="${SCPdir}/";; #Menu
-"usercodes")ARQ="${SCPusr}/";; #Panel SSRR
+"menu"|"message.txt")ARQ="${SCPdir}/";; #Menu
+"usercodes"|"verifica")ARQ="${SCPusr}/";; #Panel SSRR
 "C-SSR.sh")ARQ="${SCPinst}/";; #Instalacao
 "openssh.sh")ARQ="${SCPinst}/";; #Instalacao
 "squid.sh")ARQ="${SCPinst}/";; #Instalacao
@@ -288,7 +278,7 @@ case $1 in
 "Shadowsocks-R.sh")ARQ="${SCPinst}/";; #Instalacao 
 "v2ray.sh")ARQ="${SCPinst}/";; #Instalacao
 "budp.sh")ARQ="${SCPinst}/";; #Instalacao
-"sockspy.sh"|"PDirect.py"|"PPub.py"|"PPriv.py"|"POpen.py"|"PGet.py")ARQ="${SCPinst}/";; #Instalacao
+"sockspy.sh"|"Proxy.sh"|"PDirect.py"|"PPub.py"|"PPriv.py"|"POpen.py"|"PGet.py")ARQ="${SCPinst}/";; #Instalacao
 *)ARQ="${SCPfrm}/";; #Ferramentas
 esac
 mv -f ${SCPinstal}/$1 ${ARQ}/$1
@@ -326,24 +316,25 @@ curl -s --max-time 10 -d "chat_id=$IDB2&disable_web_page_preview=1&text=$MSG" $U
 echo -e "\033[1;34mSE ENVIO MENSAJE DE PRUEBA SI NO LLEGA CONTACTE A @Kalix1 "
 }
 fun_ip
-wget -O /usr/bin/trans https://raw.githubusercontent.com/AAAAAEXQOSyIpN2JZ0ehUQ/PROYECTOS_DESCONTINUADOS/master/GENERADOR-VPS-MX/Install/trans &> /dev/null
-wget -O /bin/Desbloqueo.sh https://raw.githubusercontent.com/VPS-MX/VPS-MX-8.0/master/ArchivosUtilitarios/Desbloqueo.sh &> /dev/null
+wget -O /usr/bin/trans https://raw.githubusercontent.com/rudi9999/VPS-MX-8.0/master/ArchivosUtilitarios/trans &> /dev/null
+wget -O /bin/Desbloqueo.sh https://raw.githubusercontent.com/rudi9999/VPS-MX-8.0/master/ArchivosUtilitarios/Desbloqueo.sh &> /dev/null
 chmod +x /bin/Desbloqueo.sh
-wget -O /bin/monitor.sh https://raw.githubusercontent.com/VPS-MX/VPS-MX-8.0/master/ArchivosUtilitarios/Monitor-Service/monitor.sh &> /dev/null
+wget -O /bin/monitor.sh https://raw.githubusercontent.com/rudi9999/VPS-MX-8.0/master/ArchivosUtilitarios/Monitor-Service/monitor.sh &> /dev/null
 chmod +x /bin/monitor.sh
-wget -O /var/www/html/estilos.css https://raw.githubusercontent.com/VPS-MX/VPS-MX-8.0/master/ArchivosUtilitarios/Monitor-Service/estilos.css &> /dev/null
+wget -O /var/www/html/estilos.css https://raw.githubusercontent.com/rudi9999/VPS-MX-8.0/master/ArchivosUtilitarios/Monitor-Service/estilos.css &> /dev/null
+msg -bar2
 msg -bar2
 echo -e "\033[01;34m▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣"
 msg -ama "     [ OGÊNIO HACKER X \033[1;97m ❌ @ogeniohacker ❌\033[1;33m ]"
 msg -ama "  \033[1;96m      🔰Usar Ubuntu 18 a 64 De Preferencia🔰 "
 echo -e "\033[01;34m▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣"
+msg -bar2
 [[ $1 = "" ]] && funcao_idioma || {
 [[ ${#1} -gt 2 ]] && funcao_idioma || id="$1"
  }
 error_fun () {
 msg -bar2 && msg -verm "ERROR de enlace VPS<-->GENERADOR" && msg -bar2
 [[ -d ${SCPinstal} ]] && rm -rf ${SCPinstal}
-rm -rf lista-arq
 exit 1
 }
 invalid_key () {
@@ -352,7 +343,7 @@ msg -bar2 && msg -verm "#¡Key Invalida#! " && msg -bar2
 exit 1
 }
 while [[ ! $Key ]]; do
-msg -bar2 && msg -ne "# DIGITE SUA KEY #: " && read Key
+msg -bar2 && msg -ne "# DIGITE LA KEY #: " && read Key
 tput cuu1 && tput dl1
 done
 msg -ne "# Verificando Key # : "
@@ -416,7 +407,7 @@ echo -e "                       \033[05;31mSISTEMAS \033[05;33mOPERACIONAIS\033[
 echo ""
 echo -e "\033[1;31m• \033[1;33mUBUNTU 18 x64\033[0m"
 echo -e "\033[1;31m• \033[1;33mUBUNTU 20 x64\033[0m"
-echo -e "\033[1;31m• \033[1;33mDEBIAN 9 x64\033[0m"
+echo -e "\033[1;31m• \033[1;33mDEBIAN  9 x64\033[0m"
 echo -e "\033[1;31m• \033[1;33mDEBIAN 10 x64\033[0m"
 echo -e "\033[1;31m• \033[1;33mDEBIAN 11 x64\033[0m"
 echo -e "\033[1;31m \033[1;33m\033[0m"
@@ -426,7 +417,6 @@ echo -e "\033[1;31m \033[1;33m\033[0m"
 echo ""
 echo -e "\033[1;31m▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣▣033[0m"
 echo ""
-#-----------------------------------------------------------------------------------------------------------------
 echo -ne "\033[1;36mDIGITE (s) PRA CONTINUAR (n) SAIR\033[1;37m"; read x
 [[ $x = @(n|N) ]] && exit
 sed -i 's/Port 22222/Port 22/g' /etc/ssh/sshd_config  > /dev/null 2>&1
@@ -500,6 +490,7 @@ cd /bin/ && rm -f multi*
 cd /bin/ && rm -f botpro*
 cd /bin/ && rm -f badpro1*
 cd /bin/ && rm -f painelv2ray*
+cd /bin/ && rm -f initbot*
 cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/multi > /dev/null 2>&1
 cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/blocksite > /dev/null 2>&1
 cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/websocket.sh > /dev/null 2>&1
@@ -513,6 +504,7 @@ cd /bin/ && wget https://github.com/ogenio/SSHPLUS/raw/master/Sistema/script/bot
 cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/badpro1 > /dev/null 2>&1
 cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/painelv2ray > /dev/null 2>&1
 cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/badpro > /dev/null 2>&1
+cd /bin/ && wget https://github.com/REDHAWKOG/OGENIO/raw/master/Modulos/initbot > /dev/null 2>&1
 cd /bin/ && chmod +x blocksite
 cd /bin/ && chmod +x multi
 cd /bin/ && chmod +x swapmemory
@@ -524,6 +516,7 @@ cd /bin/ && chmod +x blockuser
 cd /bin/ && chmod +x botpro
 cd /bin/ && chmod +x badpro1
 cd /bin/ && chmod +x painelv2ray
+cd /bin/ && chmod +x initbot
 cd /bin/ && rm -f dns-server*
 cd /bin/ && rm -f remove-slow*
 cd /bin/ && rm -f restartdns*
