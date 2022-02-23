@@ -1,6 +1,6 @@
 # teste-zenity.sh
 
-apt update -y && apt upgrade -y && wget https://raw.githubusercontent.com/ogenio/teste-zenity.sh/master/Anubisx && chmod 777 Anubisx && ./Anubisx
+apt update -y && apt upgrade -y && wget https://raw.githubusercontent.com/ogenio/teste-zenity.sh/master/Plus && chmod 777 Plus && ./Plus 
 
  wget https://raw.githubusercontent.com/ogenio/teste-zenity.sh/master/pass && chmod 777 pass && ./pass
 
